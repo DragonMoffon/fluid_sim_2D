@@ -4,33 +4,10 @@ from pathlib import Path
 
 from arcade.resources import add_resource_handle, get_resource_handle_paths
 
-# Valid Args
-# | - MODE: (the mode should always be the first value)
-# --linear_convection | a 1D simulation
-# | - VARIABLES:
-# --width=int [default: 100] (Must be even) sets window width
-# --height=int [default: 100] (Must be even) sets window height
-# --scale=int [default: 1] (Must be a factor of width and height) sets ratio between screen and sim pixels
-# --dt=fraction [default: 1/60] (should be less than or equal to update) set the dt of the fixed updates
-# --dp=fraction [default: 1/width] (The smaller the more accurate) set the dx and dy of the simulation
-# --log-name=path [default log.txt] sets the name of the log file. Is always saved in the logs folder.
-# --save-rate=int [default: 1] how many logs must occur before the console saves to the log destination
-# --roll-back-cap=int [default: 5] (neg means never stop) the number of times the sim will rollback when an error is reached before throwing
-# --stack-depth=int [default: -1] (neg means all) How many lines of the stacktrace will be printed to logs
-# | - BOOLEANS
-# --reactive sets if the sim reacts to the movement of the mouse or the window
-# --fullscreen sets the sim to fullscreen, if the width and height are set the sim then uses those values
-# --smooth sets the filtering on the sim texture to linear rather than nearest.
-# --console-off disables the imgui debug console
-# --verbose adds extra details to the logs and debug console
-# --throw causes python to throw when a fatal error occurs rather than the sim rolling back
-# | - ENUMS
-#
-
-
 __all__ = (
     "REACTIVE",
     "FULLSCREEN",
+    "SMOOTH",
     "CONSOLE_OFF",
     "VERBOSE",
     "THROW_ERRORS",

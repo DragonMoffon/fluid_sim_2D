@@ -21,7 +21,7 @@ class SimShaderLinearConvection(SimShaderBase):
         )
 
         self._sim_data: gl.Buffer = self._ctx.buffer(
-            data=struct.pack("ffff", SIM_DT, SIM_DP, 1.0, SIM_DT/SIM_DP)
+            data=struct.pack("ffff", SIM_DT, SIM_DP, 1.0, SIM_DP/SIM_DT)
         )
 
         self._write_u_texture: gl.Texture2D = self._ctx.texture(

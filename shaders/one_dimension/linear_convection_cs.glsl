@@ -17,7 +17,7 @@ SimData
 void main() {
     const int img_width = imageSize(u_in_data).x;
     const int index_i = int(gl_GlobalInvocationID.x);
-    const int index_ip = int(mod(index_i + 1, img_width));
+    const int index_ip = index_i == 0 ? img_width-1: index_i-1;
 
     const float u_i = imageLoad(u_in_data, ivec2(index_i, 0)).r;
     const float u_ip = imageLoad(u_in_data, ivec2(index_ip, 0)).r;
