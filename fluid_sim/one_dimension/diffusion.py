@@ -1,11 +1,9 @@
 """
-The Linear Convection equation is a very simple equation which describes the propagation of a wave over time
-with a speed c.
+Diffusion is the second part of the navier stokes equation along with convection. It is a double order derivative
+which makes the integration more complicated. To do the integration a taylor series has been used. Due to the
+small size of the components at x^4 and above they have been ignored to simplify the final equation.
 
-To run this simulation call "python -m fluid_sim --linear-convection-1d" in the terminal.
-
-Due to the simplicity of the simulation the speed of the wave should to be too large. This will cause a
-propagation of invalid values. This cna happen if c is too large, or the ratio between dt and dp is too large.
+To run this simulation call "python -m fluid_sim --diffusion-1d" in the terminal.
 """
 import struct
 from array import array
@@ -15,22 +13,23 @@ import arcade.gl as gl
 from arcade import get_window, ArcadeContext
 from arcade.resources import resolve
 
-from fluid_sim import SIM_WIDTH, SIM_DT, SIM_DP, RENDER_MODE_1D, RENDER_MODES_1D
+from fluid_sim import SIM_WIDTH, SIM_DT, SIM_DP, SIM_MU, RENDER_MODE_1D, RENDER_MODES_1D
 from fluid_sim.lib.sim import SimBase, SimRendererBase, SimShaderBase
 
 
-class SimShaderLinearConvection_1d(SimShaderBase):
+class SimShaderDiffusion_1d(SimShaderBase):
 
     def __init__(self):
         win = get_window()
         self._ctx: ArcadeContext = win.ctx
 
         self._comp_shader: gl.ComputeShader = self._ctx.load_compute_shader(
-            ":s:one_dimension/linear_convection_cs.glsl"
+            ":s:one_dimension/diffusion_cs.glsl"
         )
 
+        DT = 0.2 * SIM_DP**2 / SIM_MU
         self._sim_data: gl.Buffer = self._ctx.buffer(
-            data=struct.pack("ffff", SIM_DT, SIM_DP, 1.0, SIM_DT/SIM_DP)
+            data=struct.pack("ffff", DT, SIM_DP, SIM_MU, (DT / SIM_DP**2.0))
         )
 
         p_start = max(1, int(0.2 * SIM_WIDTH))
@@ -42,6 +41,7 @@ class SimShaderLinearConvection_1d(SimShaderBase):
             dtype="f4",
             data=array("f", (2.0 if p_start <= i <= p_end else 1.0 for i in range(SIM_WIDTH)))
         )
+
         self._read_u_texture: gl.Texture2D = self._ctx.texture(
             size=(SIM_WIDTH, 1),
             components=1,
@@ -63,12 +63,12 @@ class SimShaderLinearConvection_1d(SimShaderBase):
         self._comp_shader.run(group_x=SIM_WIDTH)
 
 
-class SimRendererLinearConvection_1d_gradient(SimRendererBase):
+class SimRendererDiffusion_1d_gradient(SimRendererBase):
 
-    def __init__(self, shader: SimShaderLinearConvection_1d):
+    def __init__(self, shader: SimShaderDiffusion_1d):
         super().__init__()
 
-        self._shader: SimShaderLinearConvection_1d = shader
+        self._shader: SimShaderDiffusion_1d = shader
 
         img = Image.open(resolve(":r:blue_red_ramp.png"))
         self._gradient_map_texture: gl.Texture2D = self._ctx.texture(
@@ -87,7 +87,7 @@ class SimRendererLinearConvection_1d_gradient(SimRendererBase):
         self._render_prog["colour_ramp_0"] = 1
 
     def __str__(self):
-        return "linear-convection-1d_gradient"
+        return "diffusion-1d_gradient"
 
     def _on_render(self):
         self._shader.active_texture.use(0)
@@ -95,12 +95,12 @@ class SimRendererLinearConvection_1d_gradient(SimRendererBase):
         self._draw_geo.render(self._render_prog)
 
 
-class SimRendererLinearConvection_1d_graph(SimRendererBase):
+class SimRendererDiffusion_1d_graph(SimRendererBase):
 
-    def __init__(self, shader: SimShaderLinearConvection_1d):
+    def __init__(self, shader: SimShaderDiffusion_1d):
         super().__init__()
 
-        self._shader: SimShaderLinearConvection_1d = shader
+        self._shader: SimShaderDiffusion_1d = shader
 
         self._render_prog: gl.Program = self._ctx.load_program(
             vertex_shader=":s:sim_draw_vs.glsl",
@@ -109,26 +109,26 @@ class SimRendererLinearConvection_1d_graph(SimRendererBase):
         self._render_prog["texture_0"] = 0
 
     def __str__(self):
-        return "linear-convection-1d_graph"
+        return "diffusion-1d_graph"
 
     def _on_render(self):
         self._shader.active_texture.use(0)
         self._draw_geo.render(self._render_prog)
 
 
-class SimLinearConvection_1d(SimBase):
+class SimLinearDiffusion_1d(SimBase):
 
     def __init__(self):
-        shader: SimShaderLinearConvection_1d = SimShaderLinearConvection_1d()
+        shader: SimShaderDiffusion_1d = SimShaderDiffusion_1d()
         match RENDER_MODE_1D:
             case RENDER_MODES_1D.gradient_1d:
-                renderer: SimRendererLinearConvection_1d_gradient = SimRendererLinearConvection_1d_gradient(shader)
+                renderer: SimRendererDiffusion_1d_gradient = SimRendererDiffusion_1d_gradient(shader)
             case RENDER_MODES_1D.graph_1d:
-                renderer: SimRendererLinearConvection_1d_graph = SimRendererLinearConvection_1d_graph(shader)
+                renderer: SimRendererDiffusion_1d_graph = SimRendererDiffusion_1d_graph(shader)
             case _:
-                renderer: SimRendererLinearConvection_1d_gradient = SimRendererLinearConvection_1d_gradient(shader)
+                renderer: SimRendererDiffusion_1d_gradient = SimRendererDiffusion_1d_gradient(shader)
         super().__init__(shader, renderer)
 
     @staticmethod
     def name():
-        return "linear-convection-1d"
+        return "diffusion-1d"

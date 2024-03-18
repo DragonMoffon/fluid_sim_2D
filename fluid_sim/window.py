@@ -8,7 +8,7 @@ from fluid_sim.lib import SimBase
 class SimWindow(Window):
 
     def __init__(self):
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, f"2D CFD [{SIM_WIDTH}, {SIM_HEIGHT}]", fullscreen=FULLSCREEN,
+        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, f"2D CFD [{SIM_WIDTH}, {SIM_HEIGHT}] {SIM_NAME}", fullscreen=FULLSCREEN,
                          gl_version=(4, 3))
         self.register_event_type('on_fixed_update')
 

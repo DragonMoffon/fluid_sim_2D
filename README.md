@@ -14,6 +14,7 @@ To run the code ensure you are within the root directory "fluid_sim_2D" and run
  <span style="color:yellow">--scale=int</span> <span style="color:orange">[default: 1]</span> <span style="color:red">(Must be a factor of width and height)</span> sets ratio between screen and sim pixels \
  <span style="color:yellow">--dt=fraction</span> <span style="color:orange">[default: 1/60]</span> <span style="color:red">(should be less than or equal to update)</span> set the dt of the fixed updates \
  <span style="color:yellow">--dp=fraction</span> <span style="color:orange">[default: 1/50]</span> <span style="color:red">(The smaller, the more accurate)</span> set the dx and dy of the simulation \
+ <span style="color:yellow">--mu=float</span> <span style="color:orange">[default: 1.0]</span> Set the viscosity of the simulation fluid \
  <span style="color:yellow">--log-name=path</span> <span style="color:orange">[default log.txt]</span> sets the name of the log file. Is always saved in the logs folder <span style="color:red">UNUSED</span> \
  <span style="color:yellow">--save-rate=int</span> <span style="color:orange">[default: 1]</span> how many logs must occur before the console saves to the log destination <span style="color:red">UNUSED</span>
 #### | - BOOLEANS

@@ -37,7 +37,8 @@ arguments = set(arg for arg in argv[1:])
 
 _valid_sim = {
     "linear-convection-1d",
-    "nonlinear-convection-1d"
+    "nonlinear-convection-1d",
+    "diffusion-1d"
 }
 SIM_NAME = "nonlinear-convection-1d" if (len(argv) <= 1 or argv[1][2:] not in _valid_sim) else argv[1][2:]
 arguments.discard(f"--{SIM_NAME}")
@@ -82,12 +83,15 @@ if len(_dt_frac) != 2:
 SIM_DT = float(_dt_frac[0]) / float(_dt_frac[-1])
 arguments.discard(f"--dt={_dt_frac[0]}/{_dt_frac[-1]}")
 
-_dp_frac = argument_dict.get("--dp", f"1/50").split("/")
+_dp_frac = argument_dict.get("--dp", "1/50").split("/")
 if len(_dp_frac) != 2:
-    raise ValueError(f"provided delta position fraction is invalid please use the format x/y not {argument_dict.get('--dt', f'1/50')}")
+    raise ValueError(f"provided delta position fraction is invalid please use the format x/y not {argument_dict.get('--dt', '1/50')}")
 
 SIM_DP = float(_dp_frac[0]) / float(_dp_frac[-1])
 arguments.discard(f"--dt={_dp_frac[0]}/{_dp_frac[-1]}")
+
+SIM_MU = float(argument_dict.get("--mu", "1.0"))
+arguments.discard(f"--mu={argument_dict.get('--mu', '1.0')}")
 
 _log_name = argument_dict.get("--log-dist", "log.txt")
 arguments.discard(f"--log-dist={_log_name}")
