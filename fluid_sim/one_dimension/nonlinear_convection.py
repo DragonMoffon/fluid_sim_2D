@@ -1,11 +1,8 @@
 """
-The Linear Convection equation is a very simple equation which describes the propagation of a wave over time
-with a speed c.
+Non-Linear Convection equation is a very simple equation which describes the propagation of a wave over time with
+a non-linear dependence on the speed u.
 
-To run this simulation call "python -m fluid_sim --linear-convection" in the terminal.
-
-Due to the simplicity of the simulation the speed of the wave should to be too large. This will cause a
-propagation of invalid values. This cna happen if c is too large, or the ratio between dt and dp is too large.
+To run this simulation call "python -m fluid_sim --nonlinear-convection" in the terminal.
 """
 import struct
 from array import array
@@ -24,11 +21,11 @@ class SimShaderLinearConvection(SimShaderBase):
         self._ctx: ArcadeContext = win.ctx
 
         self._comp_shader: gl.ComputeShader = self._ctx.load_compute_shader(
-            ":s:one_dimension/linear_convection_cs.glsl"
+            ":s:one_dimension/nonlinear_convection_cs.glsl"
         )
 
         self._sim_data: gl.Buffer = self._ctx.buffer(
-            data=struct.pack("ffff", SIM_DT, SIM_DP, 1.0, SIM_DT/SIM_DP)
+            data=struct.pack("fff", SIM_DT, SIM_DP, SIM_DT/SIM_DP)
         )
 
         self._write_u_texture: gl.Texture2D = self._ctx.texture(
@@ -67,11 +64,11 @@ class SimRendererLinearConvection(SimRendererBase):
 
         self._render_prog: gl.Program = self._ctx.load_program(
             vertex_shader=":s:sim_draw_vs.glsl",
-            fragment_shader=":s:one_dimension/linear_convection_render_fs.glsl"
+            fragment_shader=":s:one_dimension/convection_render_fs.glsl"
         )
 
     def __str__(self):
-        return "linear-convection-1d"
+        return "non-linear-convection-1d"
 
     def _on_render(self):
         self._shader.active_texture.use(0)
@@ -88,4 +85,4 @@ class SimLinearConvection(SimBase):
 
     @staticmethod
     def name():
-        return "linear-convection"
+        return "nonlinear-convection"

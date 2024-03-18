@@ -5,6 +5,7 @@ from pathlib import Path
 from arcade.resources import add_resource_handle, get_resource_handle_paths
 
 __all__ = (
+    "SIM_NAME",
     "REACTIVE",
     "FULLSCREEN",
     "SMOOTH",
@@ -17,6 +18,7 @@ __all__ = (
     "SIM_HEIGHT",
     "SIM_SCALING",
     "SIM_DT",
+    "SIM_DP",
     "LOG_DIST",
     "SAVE_RATE",
     "ROLL_BACK_CAP",
@@ -71,9 +73,9 @@ if len(_dt_frac) != 2:
 SIM_DT = float(_dt_frac[0]) / float(_dt_frac[-1])
 arguments.discard(f"--dt={_dt_frac[0]}/{_dt_frac[-1]}")
 
-_dp_frac = argument_dict.get("--dp", f"1/{SIM_WIDTH}").split("/")
+_dp_frac = argument_dict.get("--dp", f"1/50").split("/")
 if len(_dp_frac) != 2:
-    raise ValueError(f"provided delta position fraction is invalid please use the format x/y not {argument_dict.get('--dt', f'1/{SIM_WIDTH}')}")
+    raise ValueError(f"provided delta position fraction is invalid please use the format x/y not {argument_dict.get('--dt', f'1/50')}")
 
 SIM_DP = float(_dp_frac[0]) / float(_dp_frac[-1])
 arguments.discard(f"--dt={_dp_frac[0]}/{_dp_frac[-1]}")
