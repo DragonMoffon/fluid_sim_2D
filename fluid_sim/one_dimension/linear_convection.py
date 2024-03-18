@@ -45,8 +45,8 @@ class SimShaderLinearConvection(SimShaderBase):
         self._write_u_texture, self._read_u_texture = self._read_u_texture, self._write_u_texture
 
     def _calculate(self):
-        self._read_u_texture.use(0)
-        self._write_u_texture.use(1)
+        self._read_u_texture.bind_to_image(0, read=True, write=False)
+        self._write_u_texture.bind_to_image(1, read=False, write=True)
         self._sim_data.bind_to_storage_buffer(binding=0)
         self._comp_shader.run(group_x=SIM_WIDTH)
 
