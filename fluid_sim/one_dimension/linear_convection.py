@@ -17,7 +17,7 @@ from fluid_sim import SIM_WIDTH, SIM_DT, SIM_DP
 from fluid_sim.lib.sim import SimBase, SimRendererBase, SimShaderBase
 
 
-class SimShaderLinearConvection(SimShaderBase):
+class SimShaderLinearConvection_1d(SimShaderBase):
 
     def __init__(self):
         win = get_window()
@@ -31,17 +31,20 @@ class SimShaderLinearConvection(SimShaderBase):
             data=struct.pack("ffff", SIM_DT, SIM_DP, 1.0, SIM_DT/SIM_DP)
         )
 
+        p_start = max(1, int(0.2 * SIM_WIDTH))
+        p_end = max(1, int(0.35 * SIM_WIDTH))
+
         self._write_u_texture: gl.Texture2D = self._ctx.texture(
             size=(SIM_WIDTH, 1),
             components=1,
             dtype="f4",
-            data=array("f", (2.0 if 200 <= i <= 350 else 1.0 for i in range(SIM_WIDTH)))
+            data=array("f", (2.0 if p_start <= i <= p_end else 1.0 for i in range(SIM_WIDTH)))
         )
         self._read_u_texture: gl.Texture2D = self._ctx.texture(
             size=(SIM_WIDTH, 1),
             components=1,
             dtype="f4",
-            data=array("f", (2.0 if 200 <= i <= 350 else 1.0 for i in range(SIM_WIDTH)))
+            data=array("f", (2.0 if p_start <= i <= p_end else 1.0 for i in range(SIM_WIDTH)))
             )
 
     @property
@@ -58,16 +61,16 @@ class SimShaderLinearConvection(SimShaderBase):
         self._comp_shader.run(group_x=SIM_WIDTH)
 
 
-class SimRendererLinearConvection(SimRendererBase):
+class SimRendererLinearConvection_1d(SimRendererBase):
 
-    def __init__(self, shader: SimShaderLinearConvection):
+    def __init__(self, shader: SimShaderLinearConvection_1d):
         super().__init__()
 
-        self._shader: SimShaderLinearConvection = shader
+        self._shader: SimShaderLinearConvection_1d = shader
 
         self._render_prog: gl.Program = self._ctx.load_program(
             vertex_shader=":s:sim_draw_vs.glsl",
-            fragment_shader=":s:one_dimension/linear_convection_render_fs.glsl"
+            fragment_shader=":s:one_dimension/1d_render_fs.glsl"
         )
 
     def __str__(self):
@@ -78,14 +81,14 @@ class SimRendererLinearConvection(SimRendererBase):
         self._draw_geo.render(self._render_prog)
 
 
-class SimLinearConvection(SimBase):
+class SimLinearConvection_1d(SimBase):
 
     def __init__(self):
-        shader: SimShaderLinearConvection = SimShaderLinearConvection()
-        renderer: SimRendererLinearConvection = SimRendererLinearConvection(shader)
+        shader: SimShaderLinearConvection_1d = SimShaderLinearConvection_1d()
+        renderer: SimRendererLinearConvection_1d = SimRendererLinearConvection_1d(shader)
 
         super().__init__(shader, renderer)
 
     @staticmethod
     def name():
-        return "linear-convection"
+        return "linear-convection-1d"

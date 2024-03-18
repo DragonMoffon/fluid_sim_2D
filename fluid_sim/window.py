@@ -16,8 +16,8 @@ class SimWindow(Window):
         self._accumulated_time: float = 0.0
         self._excess_fraction: float = 0.0
 
-        sim_name: str = SIM_NAME if SIM_NAME in SimBase.children_set() else "nonlinear-convection"
-        self._sim: SimBase = SimBase.create_sim(sim_name)
+        self._sim: SimBase = SimBase.create_sim(SIM_NAME)
+        print(self._sim.name())
 
     @property
     def clock(self):

@@ -22,12 +22,13 @@ class SimBase:
 
     @staticmethod
     def create_sim(name: str):
+        print({child.name(): child for child in SimBase.__subclasses__()})
         cls = {child.name(): child for child in SimBase.__subclasses__()}[name]
         return cls()
 
     @staticmethod
     def children_set():
-        return set(child.name for child in SimBase.__subclasses__())
+        return set(child.name() for child in SimBase.__subclasses__())
 
     def draw(self):
         self._renderer.draw()

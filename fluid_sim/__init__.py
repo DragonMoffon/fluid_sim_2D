@@ -32,7 +32,15 @@ add_resource_handle("l", Path("./logs").resolve())
 root = argv[0]
 arguments = set(arg.lower() for arg in argv[1:])
 
-SIM_NAME = "" if len(argv) <= 1 else argv[1][2:]
+_valid_sim = {
+    "linear-convection-1d",
+    "nonlinear-convection-1d"
+}
+print(argv[1][2:])
+SIM_NAME = "nonlinear-convection-1d" if (len(argv) <= 1 or argv[1][2:] not in _valid_sim) else argv[1][2:]
+print(argv[1][2:] not in _valid_sim, )
+arguments.discard(f"--{SIM_NAME}")
+
 
 # Set all boolean values.
 REACTIVE = "--reactive" in arguments
