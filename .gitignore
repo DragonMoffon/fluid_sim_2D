@@ -1,3 +1,5 @@
 /.idea
 /tut
 /temp
+*/__pycache__
+*.pyc
