@@ -2,7 +2,7 @@
  A 1D and 2D fluid sim engine built with python arcade
 
 To run the code ensure you are within the root directory "fluid_sim_2D" and run
-"python -m fluid_sim"
+"python -m fluid_sim". Arguments are case-sensitive
 
 ### Valid Args
 #### | - MODE: (the mode should always be the first argument)
@@ -23,5 +23,6 @@ To run the code ensure you are within the root directory "fluid_sim_2D" and run
  <span style="color:yellow">--console-off</span> disables the imgui debug console <span style="color:red">UNUSED</span> \
  <span style="color:yellow">--verbose</span> adds extra details to the logs and debug console <span style="color:red">UNUSED</span> \
  <span style="color:yellow">--throw</span> causes python to throw when a fatal error occurs rather than the sim rolling back <span style="color:red">UNUSED</span>
-#### | - ENUMS <span style="color:red">[NOT YET IMPLIMENTENTED]</span>
+#### | - ENUMS
+ <span style="color:yellow">1d render mode</span> <span style="color:orange">[default: --1D-GRADIENT]</span> --1D-GRADIENT, --1D-GRAPH
 

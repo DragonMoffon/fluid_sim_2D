@@ -21,6 +21,7 @@ class SimRendererBase:
 
         self._texture: gl.Texture2D = self._ctx.texture(
             size=(SIM_WIDTH, SIM_HEIGHT),
+            components=4,
             filter=(
                 gl.LINEAR if SMOOTH else gl.NEAREST,
                 gl.LINEAR if SMOOTH else gl.NEAREST

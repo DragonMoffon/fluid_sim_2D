@@ -6,9 +6,11 @@ To run this simulation call "python -m fluid_sim --nonlinear-convection" in the 
 """
 import struct
 from array import array
+from PIL import Image
 
 import arcade.gl as gl
 from arcade import get_window, ArcadeContext
+from arcade.resources import resolve
 
 from fluid_sim import SIM_WIDTH, SIM_DT, SIM_DP
 from fluid_sim.lib.sim import SimBase, SimRendererBase, SimShaderBase
@@ -65,16 +67,28 @@ class SimRendererNonlinearConvection_1d(SimRendererBase):
 
         self._shader: SimShaderNonlinearConvection_1d = shader
 
+        img = Image.open(resolve(":r:blue_red_ramp.png"))
+        self._gradient_map_texture: gl.Texture2D = self._ctx.texture(
+            size=img.size,
+            filter=(gl.LINEAR, gl.NEAREST),
+            wrap_x=gl.CLAMP_TO_EDGE,
+            wrap_y=gl.REPEAT,
+            data=img.tobytes()
+        )
+
         self._render_prog: gl.Program = self._ctx.load_program(
             vertex_shader=":s:sim_draw_vs.glsl",
-            fragment_shader=":s:one_dimension/1d_render_fs.glsl"
+            fragment_shader=":s:one_dimension/1d_gradient_map_render_fs.glsl"
         )
+        self._render_prog["texture_0"] = 0
+        self._render_prog["colour_ramp_0"] = 1
 
     def __str__(self):
         return "non-linear-convection-1d"
 
     def _on_render(self):
         self._shader.active_texture.use(0)
+        self._gradient_map_texture.use(1)
         self._draw_geo.render(self._render_prog)
 
 

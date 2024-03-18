@@ -1,6 +1,7 @@
 from sys import argv
 import warnings
 from pathlib import Path
+from typing import NamedTuple
 
 from arcade.resources import add_resource_handle, get_resource_handle_paths
 
@@ -22,7 +23,9 @@ __all__ = (
     "LOG_DIST",
     "SAVE_RATE",
     "ROLL_BACK_CAP",
-    "STACK_DEPTH"
+    "STACK_DEPTH",
+    "RENDER_MODES_1D",
+    "RENDER_MODE_1D",
 )
 
 add_resource_handle("s", Path("./shaders").resolve())
@@ -30,7 +33,7 @@ add_resource_handle("r", Path("./resources").resolve())
 add_resource_handle("l", Path("./logs").resolve())
 
 root = argv[0]
-arguments = set(arg.lower() for arg in argv[1:])
+arguments = set(arg for arg in argv[1:])
 
 _valid_sim = {
     "linear-convection-1d",
@@ -100,6 +103,26 @@ arguments.discard(f"--roll-back-cap={ROLL_BACK_CAP}")
 
 STACK_DEPTH = int(argument_dict.get("--stack-depth", 5))
 arguments.discard(f"--stack-depth={STACK_DEPTH}")
+
+# Find enums, if more than one enum value is in the arguments the first one is used and the rest are
+# treated as unknowns
+
+
+class RenderModes1D(NamedTuple):
+    gradient_1d: str = "1D-GRADIENT"
+    graph_1d: str = "1D-GRAPH"
+
+
+RENDER_MODES_1D = RenderModes1D()
+for mode in RENDER_MODES_1D:
+    if f"--{mode}" not in arguments:
+        continue
+
+    arguments.discard(f"--{mode}")
+    RENDER_MODE_1D = mode
+    break
+else:
+    RENDER_MODE_1D = RENDER_MODES_1D.gradient_1d
 
 for arg in tuple(arguments):
     warnings.warn(f"unrecognised argument [{arg}]. It is being Ignored")
