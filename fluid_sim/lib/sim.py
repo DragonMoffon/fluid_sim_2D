@@ -22,7 +22,6 @@ class SimBase:
 
     @staticmethod
     def create_sim(name: str):
-        print({child.name(): child for child in SimBase.__subclasses__()})
         cls = {child.name(): child for child in SimBase.__subclasses__()}[name]
         return cls()
 

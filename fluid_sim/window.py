@@ -17,7 +17,6 @@ class SimWindow(Window):
         self._excess_fraction: float = 0.0
 
         self._sim: SimBase = SimBase.create_sim(SIM_NAME)
-        print(self._sim.name())
 
     @property
     def clock(self):

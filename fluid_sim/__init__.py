@@ -36,9 +36,7 @@ _valid_sim = {
     "linear-convection-1d",
     "nonlinear-convection-1d"
 }
-print(argv[1][2:])
 SIM_NAME = "nonlinear-convection-1d" if (len(argv) <= 1 or argv[1][2:] not in _valid_sim) else argv[1][2:]
-print(argv[1][2:] not in _valid_sim, )
 arguments.discard(f"--{SIM_NAME}")
 
 

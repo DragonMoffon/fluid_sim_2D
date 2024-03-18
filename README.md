@@ -5,8 +5,9 @@ To run the code ensure you are within the root directory "fluid_sim_2D" and run
 "python -m fluid_sim"
 
 ### Valid Args
-#### | - MODE: (the mode should always be the first value)
- <span style="color:yellow">linear-convection</span> <span style="color:orange">[default]</span> The simplest 1D simulation. 
+#### | - MODE: (the mode should always be the first argument)
+ <span style="color:yellow">linear-convection-1d</span> The simplest 1D simulation. \
+ <span style="color:yellow">nonlinear-convection-1d</span> <span style="color:orange">[default]</span> A more accurate 1D simulation with a nonlinear relationship. 
 #### | - VARIABLES:
  <span style="color:yellow">--width=int</span> <span style="color:orange">[default: 100]</span> <span style="color:red">(Must be even)</span> sets window width \
  <span style="color:yellow">--height=int</span> <span style="color:orange">[default: 100]</span> <span style="color:red">(Must be even)</span> sets window height \
