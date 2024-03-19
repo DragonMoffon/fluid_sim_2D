@@ -5,8 +5,7 @@ layout(local_size_x=1) in;
 layout(r32f, binding=0) uniform readonly image2D u_in_data;
 layout(r32f, binding=1) uniform writeonly image2D u_out_data;
 
-layout(std430, binding=0) buffer readonly
-SimData
+layout(std430, binding=0) buffer SimData
 {
     float dt;
     float dx;

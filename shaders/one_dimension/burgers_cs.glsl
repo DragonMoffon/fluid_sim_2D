@@ -5,8 +5,7 @@ layout(local_size_x=1) in;
 layout(r32i, binding=0) uniform readonly iimage2D u_in_data;
 layout(r32i, binding=1) uniform writeonly iimage2D u_out_data;
 
-layout(std430, binding=0) buffer readonly
-SimData
+layout(std430, binding=0) buffer SimData
 {
     int dt;
     int dx;
@@ -28,5 +27,5 @@ void main() {
 
     int u_n = u_i - u_i * sim.df_x * (u_i - u_im) + sim.mu * sim.df_x2 * (u_ip - 2 * u_i + u_im);
 
-    imageStore(u_out_data, ivec2(index_i, 0), ivec4(u_n));
+    imageStore(u_out_data, ivec2(index_i, 0), ivec4(200000));
 }
