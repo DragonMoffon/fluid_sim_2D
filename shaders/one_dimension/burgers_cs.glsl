@@ -27,5 +27,5 @@ void main() {
 
     int u_n = u_i - u_i * sim.df_x * (u_i - u_im) + sim.mu * sim.df_x2 * (u_ip - 2 * u_i + u_im);
 
-    imageStore(u_out_data, ivec2(index_i, 0), ivec4(200000));
+    imageStore(u_out_data, ivec2(index_i, 0), ivec4(u_n));
 }

@@ -29,11 +29,11 @@ class SimShaderBurgers_1d(SimShaderBase):
         self._sim_data: gl.Buffer = self._ctx.buffer(
             data=struct.pack(
                 "lllll",
-                int(100000*SIM_DT),
-                int(100000*SIM_DP),
-                int(100000*SIM_MU),
-                int(100000*(SIM_DT / SIM_DP)),
-                int(100000*(SIM_DT / SIM_DP**2.0)))
+                int(100_000*SIM_DT),
+                int(100_000*SIM_DP),
+                int(100_000*SIM_MU),
+                int(100_000*(SIM_DT / SIM_DP)),
+                int(100_000*(SIM_DT / SIM_DP**2.0)))
         )
 
         def phi(x, t):
@@ -43,7 +43,7 @@ class SimShaderBurgers_1d(SimShaderBase):
             return -(-8*t + 2*x)*exp(-(-4*t + x)**2/(4*SIM_MU*(t + 1)))/(4*SIM_MU*(t + 1)) - (-8*t + 2*x - 4*pi)*exp(-(-4*t + x - 2*pi)**2/(4*SIM_MU*(t + 1)))/(4*SIM_MU*(t + 1))
 
         def u(x, t):
-            return int((-2.0 * SIM_MU * (phi_prime(x, t) / phi(x, t)) + 4.0)*100000)
+            return int((-2.0 * SIM_MU * (phi_prime(x, t) / phi(x, t)) + 4.0)*100_000)
 
         def u_array():
             _i_frac = 2.0 * pi / SIM_WIDTH
@@ -51,18 +51,20 @@ class SimShaderBurgers_1d(SimShaderBase):
                 _x = i * _i_frac
                 yield u(_x, 0)
 
+        data = array("l", u_array())
+
         self._write_u_texture: gl.Texture2D = self._ctx.texture(
             size=(SIM_WIDTH, 1),
             components=1,
             dtype="i4",
-            data=array("l", u_array())
+            data=data
         )
 
         self._read_u_texture: gl.Texture2D = self._ctx.texture(
             size=(SIM_WIDTH, 1),
             components=1,
             dtype="i4",
-            data=array("l", u_array())
+            data=data
             )
 
     @property

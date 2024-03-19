@@ -1,6 +1,6 @@
 #version 330
 
-uniform sampler2D texture_0;
+uniform isampler2D texture_0;
 
 uniform float max_value;
 
