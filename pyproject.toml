@@ -1,0 +1,13 @@
+[project]
+dependencies = [
+    "arcade>=3.0.0.dev26"
+]
+requires-python = ">= 3.11"
+authors = [
+    {name = "AJ Andrews", email = "dumpy.spam.man@gmail.com"}
+]
+maintainers = [
+    {name = "AJ Andrews", email = "dumpy.spam.man@gmail.com"}
+]
+description = "Fluid Simulations using compute shaders and arcade"
+readme="README.md"
