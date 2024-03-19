@@ -37,7 +37,8 @@ class SimWindow(Window):
         self._sim.render()
 
     def on_fixed_update(self, delta_time: float):
-        self._sim.update()
+        pass
+        # self._sim.update()
 
     def on_draw(self):
         self.clear()
@@ -46,3 +47,6 @@ class SimWindow(Window):
 
     def draw_ui(self):
         pass
+
+    def on_key_press(self, symbol: int, modifiers: int):
+        self._sim.update()

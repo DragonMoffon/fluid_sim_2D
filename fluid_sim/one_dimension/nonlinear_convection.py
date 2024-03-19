@@ -12,7 +12,7 @@ import arcade.gl as gl
 from arcade import get_window, ArcadeContext
 from arcade.resources import resolve
 
-from fluid_sim import SIM_WIDTH, SIM_DT, SIM_DP
+from fluid_sim import SIM_WIDTH, SIM_DT, SIM_DP, RENDER_MODES_1D, RENDER_MODE_1D
 from fluid_sim.lib.sim import SimBase, SimRendererBase, SimShaderBase
 
 
@@ -60,7 +60,7 @@ class SimShaderNonlinearConvection_1d(SimShaderBase):
         self._comp_shader.run(group_x=SIM_WIDTH)
 
 
-class SimRendererNonlinearConvection_1d(SimRendererBase):
+class SimRendererNonlinearConvection_1d_gradient(SimRendererBase):
 
     def __init__(self, shader: SimShaderNonlinearConvection_1d):
         super().__init__()
@@ -70,7 +70,7 @@ class SimRendererNonlinearConvection_1d(SimRendererBase):
         img = Image.open(resolve(":r:blue_red_ramp.png"))
         self._gradient_map_texture: gl.Texture2D = self._ctx.texture(
             size=img.size,
-            filter=(gl.LINEAR, gl.NEAREST),
+            filter=(gl.NEAREST, gl.NEAREST),
             wrap_x=gl.CLAMP_TO_EDGE,
             wrap_y=gl.REPEAT,
             data=img.tobytes()
@@ -82,9 +82,10 @@ class SimRendererNonlinearConvection_1d(SimRendererBase):
         )
         self._render_prog["texture_0"] = 0
         self._render_prog["colour_ramp_0"] = 1
+        self._render_prog["max_value"] = 2.0
 
     def __str__(self):
-        return "non-linear-convection-1d"
+        return "linear-convection-1d_gradient"
 
     def _on_render(self):
         self._shader.active_texture.use(0)
@@ -92,12 +93,39 @@ class SimRendererNonlinearConvection_1d(SimRendererBase):
         self._draw_geo.render(self._render_prog)
 
 
+class SimRendererNonlinearConvection_1d_graph(SimRendererBase):
+
+    def __init__(self, shader: SimShaderNonlinearConvection_1d):
+        super().__init__()
+
+        self._shader: SimShaderNonlinearConvection_1d = shader
+
+        self._render_prog: gl.Program = self._ctx.load_program(
+            vertex_shader=":s:sim_draw_vs.glsl",
+            fragment_shader=":s:one_dimension/1d_graph_render_fs.glsl"
+        )
+        self._render_prog["texture_0"] = 0
+        self._render_prog["max_value"] = 2.0
+
+    def __str__(self):
+        return "linear-convection-1d_graph"
+
+    def _on_render(self):
+        self._shader.active_texture.use(0)
+        self._draw_geo.render(self._render_prog)
+
+
 class SimNonlinearConvection_1d(SimBase):
 
     def __init__(self):
         shader: SimShaderNonlinearConvection_1d = SimShaderNonlinearConvection_1d()
-        renderer: SimRendererNonlinearConvection_1d = SimRendererNonlinearConvection_1d(shader)
-
+        match RENDER_MODE_1D:
+            case RENDER_MODES_1D.gradient_1d:
+                renderer: SimRendererNonlinearConvection_1d_gradient = SimRendererNonlinearConvection_1d_gradient(shader)
+            case RENDER_MODES_1D.graph_1d:
+                renderer: SimRendererNonlinearConvection_1d_graph = SimRendererNonlinearConvection_1d_graph(shader)
+            case _:
+                renderer: SimRendererNonlinearConvection_1d_gradient = SimRendererNonlinearConvection_1d_gradient(shader)
         super().__init__(shader, renderer)
 
     @staticmethod

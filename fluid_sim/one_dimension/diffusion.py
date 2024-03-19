@@ -85,6 +85,7 @@ class SimRendererDiffusion_1d_gradient(SimRendererBase):
         )
         self._render_prog["texture_0"] = 0
         self._render_prog["colour_ramp_0"] = 1
+        self._render_prog["max_value"] = 2.0
 
     def __str__(self):
         return "diffusion-1d_gradient"
@@ -107,6 +108,7 @@ class SimRendererDiffusion_1d_graph(SimRendererBase):
             fragment_shader=":s:one_dimension/1d_graph_render_fs.glsl"
         )
         self._render_prog["texture_0"] = 0
+        self._render_prog["max_value"] = 2.0
 
     def __str__(self):
         return "diffusion-1d_graph"
@@ -116,7 +118,7 @@ class SimRendererDiffusion_1d_graph(SimRendererBase):
         self._draw_geo.render(self._render_prog)
 
 
-class SimLinearDiffusion_1d(SimBase):
+class SimDiffusion_1d(SimBase):
 
     def __init__(self):
         shader: SimShaderDiffusion_1d = SimShaderDiffusion_1d()

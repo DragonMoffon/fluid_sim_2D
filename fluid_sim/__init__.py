@@ -38,7 +38,9 @@ arguments = set(arg for arg in argv[1:])
 _valid_sim = {
     "linear-convection-1d",
     "nonlinear-convection-1d",
-    "diffusion-1d"
+    "diffusion-1d",
+    "burgers-1d",
+    "burgers-float-1d"
 }
 SIM_NAME = "nonlinear-convection-1d" if (len(argv) <= 1 or argv[1][2:] not in _valid_sim) else argv[1][2:]
 arguments.discard(f"--{SIM_NAME}")
